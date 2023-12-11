@@ -76,6 +76,15 @@ final class HomeViewController: UIViewController, Storyboardable {
             }
             .store(in: &cancellable)
 
+        controller
+            .dataSource
+            .selectedMovieSubject
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] movie in
+                navigator.navigate(to: .movieDetail(movie))
+            })
+            .store(in: &cancellable)
+
         navigationItem
             .leftBarButtonItem?
             .publisher

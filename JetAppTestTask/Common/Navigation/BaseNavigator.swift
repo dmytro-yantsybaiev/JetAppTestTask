@@ -44,7 +44,7 @@ class BaseNavigator {
         navigationController.present(viewController, animated: true)
     }
 
-    func navigate(to viewController: UIViewController, type: NavigateType = .default, animated: Bool = true) {
+    func push(_ viewController: UIViewController, type: NavigateType = .default, animated: Bool = true) {
         switch type {
         case .default:
             navigationController.pushViewController(viewController, animated: animated)
