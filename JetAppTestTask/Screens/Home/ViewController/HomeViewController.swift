@@ -18,7 +18,7 @@ final class HomeViewController: UIViewController, Storyboardable {
 
     private let fetchTopMoviesSubject = PassthroughSubject<Void, Never>()
     private let refreshTopMoviesSubject = PassthroughSubject<Void, Never>()
-    private let countCharactersOccurancePublisher = PassthroughSubject<[Movie], Never>()
+    private let countCharactersOccurancePublisher = PassthroughSubject<Movie, Never>()
 
     private var cancellable = Set<AnyCancellable>()
 
@@ -30,7 +30,6 @@ final class HomeViewController: UIViewController, Storyboardable {
     }
 
     private func configure() {
-        navigationItem.addCountCharactersOccuranceButton()
         navigationItem.addSearchButtom()
         controller.configure()
     }
@@ -85,21 +84,12 @@ final class HomeViewController: UIViewController, Storyboardable {
             })
             .store(in: &cancellable)
 
-        navigationItem
-            .leftBarButtonItem?
-            .publisher
+        controller
+            .dataSource
+            .cellLongPressSubject
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [unowned self] _ in
-                countCharactersOccurancePublisher.send(controller.dataSource.movies)
-            })
-            .store(in: &cancellable)
-
-        navigationItem
-            .rightBarButtonItem?
-            .publisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [unowned self] _ in
-                navigator.navigate(to: .movieSearch)
+            .sink(receiveValue: { [unowned self] movie in
+                countCharactersOccurancePublisher.send(movie)
             })
             .store(in: &cancellable)
 
@@ -111,6 +101,15 @@ final class HomeViewController: UIViewController, Storyboardable {
                 if controller.refreshControll.isRefreshing {
                     refreshTopMoviesSubject.send()
                 }
+            })
+            .store(in: &cancellable)
+
+        navigationItem
+            .rightBarButtonItem?
+            .publisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [unowned self] _ in
+                navigator.navigate(to: .movieSearch)
             })
             .store(in: &cancellable)
     }

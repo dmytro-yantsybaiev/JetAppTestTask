@@ -22,6 +22,7 @@ final class MoviesDataSource: NSObject {
 
     private(set) var movies = [Movie]()
     private(set) var selectedMovieSubject = PassthroughSubject<Movie, Never>()
+    private(set) var cellLongPressSubject = PassthroughSubject<Movie, Never>()
 
     func configure(with moviesCollectionView: UICollectionView) {
         self.moviesCollectionView = moviesCollectionView
@@ -95,6 +96,7 @@ extension MoviesDataSource: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         let cell: MovieCell = collectionView.dequeueReusableCell(indexPath)
+        cell.longPressSubject = cellLongPressSubject
         if let movie = movies[safe: indexPath.row] { cell.render(movie) }
         return cell
     }

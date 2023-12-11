@@ -19,15 +19,4 @@ extension UINavigationItem {
         button.tintColor = .white
         rightBarButtonItem = button
     }
-
-    func addCountCharactersOccuranceButton() {
-        let button = UIBarButtonItem(
-            image: UIImage(systemName: "character.bubble"),
-            style: .plain,
-            target: nil,
-            action: nil
-        )
-        button.tintColor = .white
-        leftBarButtonItem = button
-    }
 }

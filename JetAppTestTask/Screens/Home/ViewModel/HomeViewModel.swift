@@ -15,7 +15,7 @@ final class HomeViewModel: ViewModelType {
     struct Input {
         let fetchTopMoviesPublisher: AnyPublisher<Void, Never>
         let refreshTopMoviesPublisher: AnyPublisher<Void, Never>
-        let countCharactersOccurancePublisher: AnyPublisher<[Movie], Never>
+        let countCharactersOccurancePublisher: AnyPublisher<Movie, Never>
     }
 
     struct Output {
@@ -45,12 +45,10 @@ final class HomeViewModel: ViewModelType {
             .eraseToAnyPublisher()
 
         let charactersOccurance = input.countCharactersOccurancePublisher
-            .map { movies in
+            .map { movie in
                 var characterCounts = [Character: Int]()
-                for movie in movies {
-                    for character in movie.title {
-                        characterCounts[character, default: 0] += 1
-                    }
+                for character in movie.title {
+                    characterCounts[character, default: 0] += 1
                 }
                 return characterCounts
             }
